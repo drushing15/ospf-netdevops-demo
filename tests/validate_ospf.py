@@ -9,6 +9,12 @@ EXPECTED_NEIGHBORS = {
     "R5": ["2.2.2.2"],
 }
 
+EXPECTED_ROUTES = {
+    "R1": ["10.30.30.30"],
+    "R2": ["10.30.30.30"],
+    "R4": ["10.30.30.30"],
+    "R5": ["10.30.30.30"]
+}
 
 def validate_ospf_neighbors(device_name, ospf_output):
     expected_neighbors = EXPECTED_NEIGHBORS[device_name]
