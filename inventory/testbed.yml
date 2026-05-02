@@ -1,0 +1,89 @@
+---
+testbed:
+  name: ospf_netdevops_demo
+
+devices:
+  R1:
+    os: ios
+    type: router
+    credentials:
+      default:
+        username: admin
+        password: admin123
+    connections:
+      cli:
+        protocol: ssh
+        ip: 192.168.50.26
+        ssh_options: "-o KexAlgorithms=+diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-rsa"
+        arguments:
+          connection_timeout: 30
+          init_exec_commands: []
+          init_config_commands: []
+
+  R2:
+    os: ios
+    type: router
+    credentials:
+      default:
+        username: admin
+        password: admin123
+    connections:
+      cli:
+        protocol: ssh
+        ip: 192.168.50.194
+        ssh_options: "-o KexAlgorithms=+diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-rsa"
+        arguments:
+          connection_timeout: 30
+          init_exec_commands: []
+          init_config_commands: []
+
+  R3:
+    os: ios
+    type: router
+    credentials:
+      default:
+        username: admin
+        password: admin123
+    connections:
+      cli:
+        protocol: ssh
+        ip: 192.168.50.197
+        ssh_options: "-o KexAlgorithms=+diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-rsa"
+        arguments:
+          connection_timeout: 30
+          init_exec_commands: []
+          init_config_commands: []
+
+  R4:
+    os: ios
+    type: router
+    credentials:
+      default:
+        username: admin
+        password: admin123
+    connections:
+      cli:
+        protocol: ssh
+        ip: 192.168.50.64
+        ssh_options: "-o KexAlgorithms=+diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-rsa"
+        arguments:
+          connection_timeout: 30
+          init_exec_commands: []
+          init_config_commands: []
+
+  R5:
+    os: ios
+    type: router
+    credentials:
+      default:
+        username: admin
+        password: admin123
+    connections:
+      cli:
+        protocol: ssh
+        ip: 192.168.50.22
+        ssh_options: "-o KexAlgorithms=+diffie-hellman-group14-sha1 -o HostKeyAlgorithms=+ssh-rsa"
+        arguments:
+          connection_timeout: 30
+          init_exec_commands: []
+          init_config_commands: []
