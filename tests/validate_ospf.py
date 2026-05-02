@@ -15,11 +15,22 @@ def validate_ospf_neighbors(device_name, ospf_output):
 
     print(f"\nValidating OSPF neighbors for {device_name}...")
 
+    lines = ospf_output.splitlines()
+
     for neighbor in expected_neighbors:
-        if neighbor in ospf_output and "FULL" in ospf_output:
-            print(f"PASS: {device_name} has FULL adjacency with {neighbor}")
-        else:
-            print(f"FAIL: {device_name} is missing FULL adjacency with {neighbor}")
+        found = False
+
+        for line in lines:
+            if neighbor in line:
+                found = True
+                if "FULL" in line:
+                    print(f"PASS: {device_name} has FULL adjacency with {neighbor}")
+                else:
+                    print(f"FAIL: {device_name} neighbor {neighbor} is not FULL")
+                break
+
+        if not found:
+            print(f"FAIL: {device_name} is missing neighbor {neighbor}")
 
 
 def main():
