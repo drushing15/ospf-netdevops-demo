@@ -82,3 +82,24 @@ Expected result:
 - show ip ospf neighbor
 - show ip route ospf
 - show ip ospf interface brief
+
+## Completed Workflow
+
+This lab now demonstrates a basic NetDevOps workflow:
+
+1. Built a multi-area OSPF topology in Cisco Modeling Labs
+2. Established SSH access to all IOSv routers
+3. Created a pyATS testbed file for device connectivity
+4. Wrote a Python validation script to check OSPF neighbor state
+5. Added route validation for OSPF-learned networks
+6. Used Ansible to add Loopback30 to R3
+7. Advertised 10.30.30.30/32 into OSPF Area 10
+8. Re-ran validation to confirm the loopback route propagated to R1, R2, R4, and R5
+
+## Validation Results
+
+The pyATS validation script confirms:
+
+- All expected OSPF neighbors are in FULL state
+- OSPF routes are present in the routing table
+- The new loopback route `10.30.30.30/32` is learned by remote routers after the Ansible change
