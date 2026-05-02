@@ -1,3 +1,4 @@
+import sys
 from genie.testbed import load
 
 
@@ -9,12 +10,8 @@ EXPECTED_NEIGHBORS = {
     "R5": ["2.2.2.2"],
 }
 
-EXPECTED_ROUTES = {
-    "R1": ["10.30.30.30"],
-    "R2": ["10.30.30.30"],
-    "R4": ["10.30.30.30"],
-    "R5": ["10.30.30.30"]
-}
+LOOPBACK_ROUTE = "10.30.30.30"
+REMOTE_ROUTERS = ["R1", "R2", "R4", "R5"]
 
 def validate_ospf_neighbors(device_name, ospf_output):
     expected_neighbors = EXPECTED_NEIGHBORS[device_name]
@@ -38,22 +35,50 @@ def validate_ospf_neighbors(device_name, ospf_output):
         if not found:
             print(f"FAIL: {device_name} is missing neighbor {neighbor}")
 
-def validate_ospf_routes(device_name, route_output):
+def validate_ospf_routes(device_name, route_output, mode):
     print(f"\nValidating OSPF routes for {device_name}...")
 
-    expected_routes = EXPECTED_ROUTES.get(device_name, [])
+    if "O" in route_output:
+        print(f"PASS: {device_name} has OSPF routes installed")
+    else:
+        print(f"FAIL: {device_name} has no OSPF routes")
 
-    if not expected_routes:
-        print(f"INFO: {device_name} has no remote OSPF route checks defined")
+    if device_name not in REMOTE_ROUTERS:
+        print(f"INFO: {device_name} is the source router for Loopback30")
         return
 
-    for route in expected_routes:
-        if route in route_output:
-            print(f"PASS: {device_name} learned expected OSPF route {route}")
+    route_exists = LOOPBACK_ROUTE in route_output
+
+    if mode == "pre":
+        if not route_exists:
+            print(f"PASS: {device_name} does not have {LOOPBACK_ROUTE} before change")
         else:
-            print(f"FAIL: {device_name} is missing expected OSPF route {route}")
+            print(f"FAIL: {device_name} already has {LOOPBACK_ROUTE} before change")
+
+    elif mode == "post":
+        if route_exists:
+            print(f"PASS: {device_name} learned expected route {LOOPBACK_ROUTE} after change")
+        else:
+            print(f"FAIL: {device_name} is missing expected route {LOOPBACK_ROUTE} after change")
 
 def main():
+
+    if len(sys.argv) != 2:
+
+        print("Usage: python3 tests/validate_ospf.py <pre|post>")
+
+        sys.exit(1)
+
+    mode = sys.argv[1]
+
+    if mode not in ["pre", "post"]:
+
+        print("Invalid mode. Use 'pre' or 'post'.")
+
+        sys.exit(1)
+
+    print(f"Running OSPF validation in {mode.upper()} mode")
+
     testbed = load("inventory/testbed.yml")
 
     for device_name, device in testbed.devices.items():
@@ -72,7 +97,7 @@ def main():
         print(f"{device_name} OSPF routes:")
         print(route_output)
 
-        validate_ospf_routes(device_name, route_output)
+        validate_ospf_routes(device_name, route_output, mode)
 
         device.disconnect()
 
