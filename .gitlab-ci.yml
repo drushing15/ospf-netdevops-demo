@@ -1,0 +1,10 @@
+stages:
+  - network_workflow
+
+ospf_netdevops_workflow:
+  stage: network_workflow
+  tags:
+    - cml-local
+  script:
+    - chmod +x run_workflow.sh
+    - ./run_workflow.sh
