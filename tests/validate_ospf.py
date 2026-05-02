@@ -32,6 +32,13 @@ def validate_ospf_neighbors(device_name, ospf_output):
         if not found:
             print(f"FAIL: {device_name} is missing neighbor {neighbor}")
 
+def validate_ospf_routes(device_name, route_output):
+    print(f"\nValidating OSPF routes for {device_name}...")
+
+    if "O" in route_output:
+        print(f"PASS: {device_name} has OSPF routes installed")
+    else:
+        print(f"FAIL: {device_name} has no OSPF routes")
 
 def main():
     testbed = load("inventory/testbed.yml")
@@ -46,6 +53,13 @@ def main():
         print(ospf_output)
 
         validate_ospf_neighbors(device_name, ospf_output)
+
+        route_output = device.execute("show ip route ospf")
+
+        print(f"{device_name} OSPF routes:")
+        print(route_output)
+
+        validate_ospf_routes(device_name, route_output)
 
         device.disconnect()
 
