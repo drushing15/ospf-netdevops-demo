@@ -41,10 +41,17 @@ def validate_ospf_neighbors(device_name, ospf_output):
 def validate_ospf_routes(device_name, route_output):
     print(f"\nValidating OSPF routes for {device_name}...")
 
-    if "O" in route_output:
-        print(f"PASS: {device_name} has OSPF routes installed")
-    else:
-        print(f"FAIL: {device_name} has no OSPF routes")
+    expected_routes = EXPECTED_ROUTES.get(device_name, [])
+
+    if not expected_routes:
+        print(f"INFO: {device_name} has no remote OSPF route checks defined")
+        return
+
+    for route in expected_routes:
+        if route in route_output:
+            print(f"PASS: {device_name} learned expected OSPF route {route}")
+        else:
+            print(f"FAIL: {device_name} is missing expected OSPF route {route}")
 
 def main():
     testbed = load("inventory/testbed.yml")
